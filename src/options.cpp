@@ -18,15 +18,16 @@ Options::Options(std::vector<std::string> const &argv) {
                         true,                  // show help if requested
                         app::project_version); // version string
 
-  if (args["--verbose"].asBool())
+  if (args["--verbose"].asBool()) {
     spdlog::set_level(spdlog::level::debug);
+  }
 
   width  = static_cast<unsigned int>(args["--width"].asLong());
   height = static_cast<unsigned int>(args["--height"].asLong());
 }
 
 void Options::checkOptions() const {
-  if (width < 8 || height < 8) {
+  if (width < MIN_WINDOW_SIZE || height < MIN_WINDOW_SIZE) {
     spdlog::error("Command line options are out of reasonable range.");
     for (auto const &arg : args) {
       if (arg.second.isString()) {

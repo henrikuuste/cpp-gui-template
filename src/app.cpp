@@ -8,17 +8,22 @@
 
 void handleEvents(sf::RenderWindow &window);
 
+static constexpr float DPI_SCALE = 2.0F;
+
 int main(int argc, const char **argv) {
-  Options opt({std::next(argv), std::next(argv, argc)});
+  Options const opt({std::next(argv), std::next(argv, argc)});
   opt.checkOptions();
 
   spdlog::info("Starting application");
 
   sf::RenderWindow window(sf::VideoMode(opt.width, opt.height), "Template application",
                           sf::Style::Titlebar | sf::Style::Close);
-  ImGui::SFML::Init(window);
+  if (!ImGui::SFML::Init(window)) {
+    spdlog::error("Failed to initialize ImGUI");
+    abort();
+  }
   ImGui::GetIO().FontGlobalScale =
-      2.0; // DPI scaling for 4K screen...need to figure this out for actual use
+      DPI_SCALE; // DPI scaling for 4K screen...need to figure this out for actual use
 
   AppContext ctx;
   StatsGUI statsGUI;
@@ -47,7 +52,7 @@ void handleEvents(sf::RenderWindow &window) {
     }
 
     if (event.type == sf::Event::KeyPressed) {
-      if (event.key.code == sf::Keyboard::Escape) {
+      if (event.key.code == sf::Keyboard::Escape) { // NOLINT
         window.close();
       }
     }

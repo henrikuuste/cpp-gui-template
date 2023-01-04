@@ -14,4 +14,6 @@ public:
 
   unsigned int width  = 1024;
   unsigned int height = 1024;
+
+  static constexpr unsigned int MIN_WINDOW_SIZE = 100;
 };
